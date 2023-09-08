@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Pictures</title>
+    <meta name="author" content="PANKAJ SAHU">
+    <meta name="keywords" content="Car image, button, box.">
+    <meta name="description" content="A simple web application which allow user to display the random car image by clicking in get button.">
+    <style>
+        * {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border: none;
+            outline: none;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, lightblue, yellow);
+        }
+
+        .main {
+            width: 45%;
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #searchButton {
+            background-color: green;
+            color: aliceblue;
+            padding: 10px 30px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid black;
+        }
+
+        .search-results {
+            height: 100%;
+        }
+
+        .search-result {
+            width: 100%;
+            height: 250px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .search-result:hover img {
+            transform: scale(1.05);
+        }
+
+        .search-result img {
+            width: 100%;
+            height: 100%;
+            object-fit: none;
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <h2>Car Pics Generator</h2>
+        <div class="search-results" id="searchResults"></div>
+        <button id="searchButton">Get Cars</button>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const accessKey = "xJxJPJ1pk4HgFuMIsX9RFCavN6IGU4Yawa14P5Aq31s";
+            const searchResults = document.getElementById("searchResults");
+            const searchButton = document.getElementById("searchButton");
+
+            async function searchImages() {
+                searchResults.innerHTML = "";
+                const url = `https://api.unsplash.com/photos/random?client_id=${accessKey}&query=car`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    const data = await response.json();
+                    const result = data;
+
+                    const imageWrapper = document.createElement("div");
+                    imageWrapper.classList.add("search-result");
+                    const image = document.createElement("img");
+                    image.src = result.urls.small;
+                    image.alt = result.alt_description;
+
+                    imageWrapper.appendChild(image);
+                    searchResults.appendChild(imageWrapper);
+                    searchResults.style.display = "block";
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+
+            searchButton.addEventListener("click", searchImages);
+        });
+
+    </script>
+</body>
+
+</html>
